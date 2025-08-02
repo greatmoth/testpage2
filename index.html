@@ -11,13 +11,24 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* 재생 아이콘 애니메이션을 위한 키프레임 (이제 사용되지 않음) */
-        @keyframes pulse-play {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        /* 클립보드 복사 알림창 스타일 */
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(34, 197, 94, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
         }
-        /* .play-icon-pulse 클래스는 이제 사용되지 않습니다. */
+        .toast-message.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
@@ -35,7 +46,7 @@
                 <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <div class="text-center p-4">
                         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">개덕필의 노래책</h1>
-                        <p class="text-lg text-gray-300 mb-8">좋아하는 노래, 아티스트, 앨범을 찾아보세요.</p>
+                        <p class="text-lg text-gray-300 mb-8">단가 치즈 5,000개, 어려운 곡은 도중에 끌 수 있음</p>
                         <!-- 검색바 -->
                         <div class="relative w-full max-w-xl mx-auto">
                             <input 
@@ -78,7 +89,6 @@
 
         <!-- 노래 목록 섹션 -->
         <section>
-            <h2 class="text-3xl font-bold mb-6 text-gray-50">최신 음악</h2>
             
             <!-- 노래 카드가 동적으로 추가될 영역 -->
             <div class="flex flex-col gap-4" id="song-list">
@@ -87,26 +97,8 @@
         </section>
     </div>
 
-    <!-- 현재 재생 중 섹션 (하단 고정) -->
-    <div id="now-playing-section" class="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 border-t border-gray-700 shadow-xl hidden">
-        <div class="container mx-auto max-w-7xl flex items-center justify-between">
-            <div class="flex items-center">
-                <img id="now-playing-art" src="" alt="앨범 아트" class="w-12 h-12 rounded-md mr-4">
-                <div>
-                    <h3 id="now-playing-title" class="text-lg font-semibold text-gray-50"></h3>
-                    <p id="now-playing-artist" class="text-sm text-gray-400"></p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-4">
-                <!-- 재생 버튼 아이콘 -->
-                <button class="text-gray-400 hover:text-blue-400 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4.004a1 1 0 001.555.832l3.445-2.002a1 1 0 000-1.664l-3.445-2.002z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- 클립보드 복사 성공 알림 메시지 (숨김 상태) -->
+    <div id="toast" class="toast-message"></div>
 
     <!-- 동적 노래 목록 생성 및 검색 기능을 위한 JavaScript 코드 -->
     <script>
@@ -137,11 +129,8 @@
             // DOM 요소들을 변수에 할당
             const searchInput = document.getElementById('search-input');
             const songList = document.getElementById('song-list');
-            const nowPlayingSection = document.getElementById('now-playing-section');
-            const nowPlayingTitle = document.getElementById('now-playing-title');
-            const nowPlayingArtist = document.getElementById('now-playing-artist');
-            const nowPlayingArt = document.getElementById('now-playing-art');
             const categoryButtons = document.querySelectorAll('.category-btn');
+            const toast = document.getElementById('toast');
 
             let activeCategory = 'All'; // 현재 활성화된 카테고리를 추적합니다.
             let currentSongs = songs; // 현재 표시할 노래 목록입니다.
@@ -168,18 +157,49 @@
                         <p class="text-gray-400 text-sm truncate">${song.artist}</p>
                     `;
                     
-                    // 클릭 이벤트 리스너를 추가하여 '현재 재생 중' 섹션을 업데이트합니다.
+                    // 클릭 이벤트 리스너를 추가하여 신청 문구를 클립보드에 복사합니다.
                     card.addEventListener('click', () => {
-                        nowPlayingTitle.textContent = song.title;
-                        nowPlayingArtist.textContent = song.artist;
-                        nowPlayingArt.src = song.imageUrl;
-                        nowPlayingArt.alt = `${song.title} 앨범 아트`;
-                        nowPlayingSection.classList.remove('hidden');
+                        const songTitle = song.title;
+                        // 작은따옴표를 제거하고 문구를 구성합니다.
+                        const textToCopy = `신청 ${songTitle}`;
+
+                        // Canvas 환경에서는 navigator.clipboard API가 차단될 수 있으므로,
+                        // 구형 브라우저에서 사용하던 document.execCommand('copy') 방식을 사용합니다.
+                        const textArea = document.createElement('textarea');
+                        textArea.value = textToCopy;
+                        // 이 textarea를 화면 밖으로 옮겨서 사용자에게 보이지 않게 합니다.
+                        textArea.style.position = 'fixed';
+                        textArea.style.top = '0';
+                        textArea.style.left = '0';
+                        textArea.style.opacity = '0';
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        try {
+                            document.execCommand('copy');
+                            showToast(`클립보드에 "${textToCopy}"가 복사되었습니다.`);
+                        } catch (err) {
+                            console.error('클립보드 복사 실패:', err);
+                            showToast('클립보드 복사 실패!');
+                        }
+                        document.body.removeChild(textArea);
                     });
                     
                     songList.appendChild(card);
                 });
             };
+
+            /**
+             * 클립보드 복사 성공 알림 메시지를 표시합니다.
+             * @param {string} message - 알림창에 표시할 메시지
+             */
+            const showToast = (message) => {
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
 
             /**
              * 카테고리 또는 검색어에 따라 노래 목록을 필터링하고 렌더링합니다.
