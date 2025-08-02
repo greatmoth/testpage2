@@ -100,6 +100,32 @@
         </section>
     </div>
 
+    <!-- 공지사항 모달 -->
+    <!-- 초기에는 hidden 클래스로 숨겨져 있습니다. -->
+    <div id="notice-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 text-gray-200 rounded-3xl shadow-2xl p-8 max-w-xl w-full relative">
+            <h2 class="text-3xl font-bold text-blue-400 mb-4">📢 공지사항</h2>
+            <div class="text-lg space-y-3">
+                <p>안녕하세요! 홈페이지에 방문해주셔서 감사합니다.</p>
+                <p>현재 노래책 데이터가 업데이트 중입니다. 불편하시더라도 양해 부탁드립니다.</p>
+                <p>새로운 곡 신청은 언제든 가능합니다. 😊</p>
+            </div>
+            <!-- 모달 닫기 버튼 -->
+            <button id="close-modal" class="absolute top-4 right-4 p-2 text-gray-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 공지사항 버튼: 스크롤에 상관없이 좌측 상단에 배치 -->
+    <button id="show-modal-btn" class="fixed top-4 left-4 p-3 bg-gray-700 rounded-full shadow-lg text-white hover:bg-gray-600 transition-colors z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+    </button>
+
     <!-- 클립보드 복사 성공 알림 메시지 (숨김 상태) -->
     <div id="toast" class="toast-message"></div>
 
@@ -107,26 +133,26 @@
     <script>
         // DOM 콘텐츠가 모두 로드된 후 스크립트를 실행합니다.
         document.addEventListener('DOMContentLoaded', () => {
-            // 더미 노래 데이터 배열
+            // 더미 노래 데이터 배열에 키(key)와 BPM 정보를 추가합니다.
             const songs = [
-                { title: 'Dynamite', artist: 'BTS', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+1' },
-                { title: 'Lovesick Girls', artist: 'BLACKPINK', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+2' },
-                { title: 'Ditto', artist: 'NewJeans', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+3' },
-                { title: 'Super Shy', artist: 'NewJeans', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+4' },
-                { title: 'Idol', artist: 'BTS', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+5' },
+                { title: 'Dynamite', artist: 'BTS', category: 'K-POP', key: 'G#', bpm: 114, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+1' },
+                { title: 'Lovesick Girls', artist: 'BLACKPINK', category: 'K-POP', key: 'F', bpm: 128, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+2' },
+                { title: 'Ditto', artist: 'NewJeans', category: 'K-POP', key: 'C#', bpm: 134, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+3' },
+                { title: 'Super Shy', artist: 'NewJeans', category: 'K-POP', key: 'G#', bpm: 125, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+4' },
+                { title: 'Idol', artist: 'BTS', category: 'K-POP', key: 'A', bpm: 126, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+5' },
                 
-                { title: 'Sparkle', artist: 'RADWIMPS', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+1' },
-                { title: 'Gurenge', artist: 'LiSA', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+2' },
-                { title: 'The Hero!!', artist: 'JAM Project', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+3' },
-                { title: 'Inferno', artist: 'Mrs. Green Apple', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+4' },
+                { title: 'Sparkle', artist: 'RADWIMPS', category: 'Animation', key: 'B', bpm: 140, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+1' },
+                { title: 'Gurenge', artist: 'LiSA', category: 'Animation', key: 'F#m', bpm: 135, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+2' },
+                { title: 'The Hero!!', artist: 'JAM Project', category: 'Animation', key: 'C#m', bpm: 170, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+3' },
+                { title: 'Inferno', artist: 'Mrs. Green Apple', category: 'Animation', key: 'D#m', bpm: 135, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+4' },
                 
-                { title: 'Shape of You', artist: 'Ed Sheeran', category: 'Number', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+1' },
-                { title: 'Blinding Lights', artist: 'The Weeknd', category: 'Number', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+2' },
-                { title: 'Dance Monkey', artist: 'Tones and I', category: 'Number', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+3' },
+                { title: 'Shape of You', artist: 'Ed Sheeran', category: 'Number', key: 'C#m', bpm: 96, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+1' },
+                { title: 'Blinding Lights', artist: 'The Weeknd', category: 'Number', key: 'Fm', bpm: 171, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+2' },
+                { title: 'Dance Monkey', artist: 'Tones and I', category: 'Number', key: 'F#m', bpm: 98, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+3' },
 
-                { title: 'Lemon', artist: 'Kenshi Yonezu', category: 'J-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+1' },
-                { title: 'Night Dancer', artist: 'imase', category: 'J-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+2' },
-                { title: 'Yoru ni Kakeru', artist: 'YOASOBI', category: 'J-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+3' },
+                { title: 'Lemon', artist: 'Kenshi Yonezu', category: 'J-POP', key: 'C', bpm: 104, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+1' },
+                { title: 'Night Dancer', artist: 'imase', category: 'J-POP', key: 'C', bpm: 110, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+2' },
+                { title: 'Yoru ni Kakeru', artist: 'YOASOBI', category: 'J-POP', key: 'F', bpm: 130, imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+3' },
             ];
 
             // DOM 요소들을 변수에 할당
@@ -134,6 +160,10 @@
             const songList = document.getElementById('song-list');
             const categoryButtons = document.querySelectorAll('.category-btn');
             const toast = document.getElementById('toast');
+            // 모달 관련 요소 추가
+            const noticeModal = document.getElementById('notice-modal');
+            const closeModalBtn = document.getElementById('close-modal');
+            const showModalBtn = document.getElementById('show-modal-btn'); // 새로운 버튼
 
             let activeCategory = 'All'; // 현재 활성화된 카테고리를 추적합니다.
             let currentSongs = songs; // 현재 표시할 노래 목록입니다.
@@ -150,27 +180,28 @@
                 }
                 songsToRender.forEach(song => {
                     const card = document.createElement('div');
-                    // 노래 카드를 한 행에 하나씩 표시하도록 스타일을 변경합니다.
                     card.className = 'bg-gray-800 p-4 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer';
                     card.innerHTML = `
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-gray-50 truncate">${song.title}</h3>
                             <span class="bg-gray-700 text-gray-400 text-xs font-semibold px-2 py-1 rounded-full">${song.category}</span>
                         </div>
-                        <p class="text-gray-400 text-sm truncate">${song.artist}</p>
+                        <div class="flex items-center justify-between mt-1">
+                            <p class="text-gray-400 text-sm truncate">${song.artist}</p>
+                            <div class="flex space-x-2 text-gray-500 text-xs">
+                                <span>Key: ${song.key}</span>
+                                <span>BPM: ${song.bpm}</span>
+                            </div>
+                        </div>
                     `;
                     
                     // 클릭 이벤트 리스너를 추가하여 신청 문구를 클립보드에 복사합니다.
                     card.addEventListener('click', () => {
                         const songTitle = song.title;
-                        // 작은따옴표를 제거하고 문구를 구성합니다.
                         const textToCopy = `신청 ${songTitle}`;
 
-                        // Canvas 환경에서는 navigator.clipboard API가 차단될 수 있으므로,
-                        // 구형 브라우저에서 사용하던 document.execCommand('copy') 방식을 사용합니다.
                         const textArea = document.createElement('textarea');
                         textArea.value = textToCopy;
-                        // 이 textarea를 화면 밖으로 옮겨서 사용자에게 보이지 않게 합니다.
                         textArea.style.position = 'fixed';
                         textArea.style.top = '0';
                         textArea.style.left = '0';
@@ -230,16 +261,30 @@
                 renderSongs(currentSongs);
             };
 
+            // 모달 표시 및 닫기 기능
+            const showModal = () => {
+                noticeModal.classList.remove('hidden');
+            };
+
+            const closeModal = () => {
+                noticeModal.classList.add('hidden');
+            };
+
+            // 공지사항 버튼과 닫기 버튼에 클릭 이벤트 리스너를 추가합니다.
+            showModalBtn.addEventListener('click', showModal);
+            closeModalBtn.addEventListener('click', closeModal);
+
+            // 페이지 로드 시에는 모달을 띄우지 않습니다.
+            // showModal(); // 이 코드를 제거하여 자동 실행을 막습니다.
+
             // 카테고리 버튼에 클릭 이벤트 리스너를 추가합니다.
             categoryButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    // 모든 버튼의 활성화 상태를 초기화합니다.
                     categoryButtons.forEach(btn => {
                         btn.classList.remove('bg-blue-500', 'text-white');
                         btn.classList.add('bg-gray-700', 'text-gray-200');
                     });
 
-                    // 클릭된 버튼을 활성화합니다.
                     button.classList.remove('bg-gray-700', 'text-gray-200');
                     button.classList.add('bg-blue-500', 'text-white');
                     
