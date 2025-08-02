@@ -69,22 +69,6 @@
             </div>
         </header>
 
-        <!-- 모달 버튼들 (새로운 위치) -->
-        <!-- 이제 메인 컨테이너 내에서 우측에 배치됩니다. -->
-        <div class="flex justify-end space-x-2 mb-8">
-            <!-- 숙제 버튼 -->
-            <button id="show-homework-modal-btn" class="py-3 px-6 bg-blue-600 rounded-full shadow-lg text-white hover:bg-blue-700 transition-colors flex items-center justify-center">
-                <span class="text-sm font-semibold">숙제</span>
-            </button>
-            
-            <!-- 공지사항 버튼 -->
-            <button id="show-modal-btn" class="p-3 bg-red-600 rounded-full shadow-lg text-white hover:bg-red-700 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-            </button>
-        </div>
-
         <!-- 카테고리 선택 섹션 -->
         <section class="mb-8">
             <div class="flex flex-wrap justify-center space-x-2 sm:space-x-4">
@@ -156,6 +140,21 @@
                 </svg>
             </button>
         </div>
+    </div>
+
+    <!-- 고정된 우측 하단 버튼 컨테이너 -->
+    <div class="fixed bottom-4 right-4 flex space-x-2 z-50">
+        <!-- 숙제 버튼 -->
+        <button id="show-homework-modal-btn" class="py-3 px-6 bg-blue-600 rounded-full shadow-lg text-white hover:bg-blue-700 transition-colors flex items-center justify-center">
+            <span class="text-sm font-semibold">숙제</span>
+        </button>
+        
+        <!-- 공지사항 버튼 -->
+        <button id="show-modal-btn" class="p-3 bg-red-600 rounded-full shadow-lg text-white hover:bg-red-700 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+        </button>
     </div>
 
     <!-- 클립보드 복사 성공 알림 메시지 (숨김 상태) -->
