@@ -118,13 +118,44 @@
             </button>
         </div>
     </div>
+    
+    <!-- 숙제 모달 -->
+    <!-- 새로운 모달입니다. 초기에는 hidden 클래스로 숨겨져 있습니다. -->
+    <div id="homework-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 text-gray-200 rounded-3xl shadow-2xl p-8 max-w-xl w-full relative">
+            <h2 class="text-3xl font-bold text-green-400 mb-4">📝 숙제</h2>
+            <div class="text-lg space-y-3">
+                <p>이번 주 숙제는 아래와 같습니다:</p>
+                <ul class="list-disc list-inside ml-4">
+                    <li>K-POP 카테고리 노래 5곡 외우기</li>
+                    <li>애니메이션 카테고리 노래 1곡 외우기</li>
+                    <li>모든 카테고리에서 BPM 150 이상인 곡 3곡 찾기</li>
+                </ul>
+                <p>숙제를 완료하면 다음 주에 선생님께 확인을 받으세요! 💪</p>
+            </div>
+            <!-- 모달 닫기 버튼 -->
+            <button id="close-homework-modal" class="absolute top-4 right-4 p-2 text-gray-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    </div>
 
-    <!-- 공지사항 버튼: 스크롤에 상관없이 좌측 상단에 배치 -->
-    <button id="show-modal-btn" class="fixed top-4 left-4 p-3 bg-gray-700 rounded-full shadow-lg text-white hover:bg-gray-600 transition-colors z-50">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-        </svg>
-    </button>
+    <!-- 고정된 우측 하단 버튼 컨테이너 -->
+    <div class="fixed bottom-4 right-4 flex space-x-2 z-50">
+        <!-- 숙제 버튼: 종 모양 아이콘을 삭제했습니다. -->
+        <button id="show-homework-modal-btn" class="py-3 px-6 bg-blue-600 rounded-full shadow-lg text-white hover:bg-blue-700 transition-colors flex items-center justify-center">
+            <span class="text-sm font-semibold">숙제</span>
+        </button>
+        
+        <!-- 공지사항 버튼: 기존의 버튼 -->
+        <button id="show-modal-btn" class="p-3 bg-red-600 rounded-full shadow-lg text-white hover:bg-red-700 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+        </button>
+    </div>
 
     <!-- 클립보드 복사 성공 알림 메시지 (숨김 상태) -->
     <div id="toast" class="toast-message"></div>
@@ -160,10 +191,17 @@
             const songList = document.getElementById('song-list');
             const categoryButtons = document.querySelectorAll('.category-btn');
             const toast = document.getElementById('toast');
-            // 모달 관련 요소 추가
+            
+            // 공지사항 모달 관련 요소
             const noticeModal = document.getElementById('notice-modal');
             const closeModalBtn = document.getElementById('close-modal');
-            const showModalBtn = document.getElementById('show-modal-btn'); // 새로운 버튼
+            const showModalBtn = document.getElementById('show-modal-btn');
+            
+            // 숙제 모달 관련 요소
+            const homeworkModal = document.getElementById('homework-modal');
+            const closeHomeworkModalBtn = document.getElementById('close-homework-modal');
+            const showHomeworkModalBtn = document.getElementById('show-homework-modal-btn');
+
 
             let activeCategory = 'All'; // 현재 활성화된 카테고리를 추적합니다.
             let currentSongs = songs; // 현재 표시할 노래 목록입니다.
@@ -261,18 +299,32 @@
                 renderSongs(currentSongs);
             };
 
-            // 모달 표시 및 닫기 기능
-            const showModal = () => {
+            // 공지사항 모달 표시 및 닫기 기능
+            const showNoticeModal = () => {
                 noticeModal.classList.remove('hidden');
             };
 
-            const closeModal = () => {
+            const closeNoticeModal = () => {
                 noticeModal.classList.add('hidden');
+            };
+            
+            // 숙제 모달 표시 및 닫기 기능
+            const showHomeworkModal = () => {
+                homeworkModal.classList.remove('hidden');
+            };
+
+            const closeHomeworkModal = () => {
+                homeworkModal.classList.add('hidden');
             };
 
             // 공지사항 버튼과 닫기 버튼에 클릭 이벤트 리스너를 추가합니다.
-            showModalBtn.addEventListener('click', showModal);
-            closeModalBtn.addEventListener('click', closeModal);
+            showModalBtn.addEventListener('click', showNoticeModal);
+            closeModalBtn.addEventListener('click', closeNoticeModal);
+            
+            // 숙제 버튼과 닫기 버튼에 클릭 이벤트 리스너를 추가합니다.
+            showHomeworkModalBtn.addEventListener('click', showHomeworkModal);
+            closeHomeworkModalBtn.addEventListener('click', closeHomeworkModal);
+
 
             // 페이지 로드 시에는 모달을 띄우지 않습니다.
             // showModal(); // 이 코드를 제거하여 자동 실행을 막습니다.
