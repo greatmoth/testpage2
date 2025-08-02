@@ -11,15 +11,13 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* 재생 아이콘 애니메이션을 위한 키프레임 */
+        /* 재생 아이콘 애니메이션을 위한 키프레임 (이제 사용되지 않음) */
         @keyframes pulse-play {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
         }
-        .play-icon-pulse {
-            animation: pulse-play 2s infinite;
-        }
+        /* .play-icon-pulse 클래스는 이제 사용되지 않습니다. */
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
@@ -30,13 +28,13 @@
         <header class="mb-12">
             <div class="relative w-full rounded-3xl overflow-hidden shadow-lg h-80">
                 <img 
-                    src="https://placehold.co/1200x320/1f2937/d1d5db?text=음악+홈페이지+배너" 
+                    src="https://github.com/greatmoth/testpage2/blob/main/top.png?raw=true" 
                     alt="음악 홈페이지 배너 이미지"
                     class="w-full h-full object-cover"
                 >
                 <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <div class="text-center p-4">
-                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">음악의 세계로 빠져보세요</h1>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">개덕필의 노래책</h1>
                         <p class="text-lg text-gray-300 mb-8">좋아하는 노래, 아티스트, 앨범을 찾아보세요.</p>
                         <!-- 검색바 -->
                         <div class="relative w-full max-w-xl mx-auto">
@@ -57,12 +55,33 @@
             </div>
         </header>
 
+        <!-- 카테고리 선택 섹션 -->
+        <section class="mb-8">
+            <div class="flex flex-wrap justify-center space-x-2 sm:space-x-4">
+                <button data-category="All" class="category-btn bg-blue-500 text-white font-semibold py-2 px-6 rounded-full transition-colors hover:bg-blue-600">
+                    전체
+                </button>
+                <button data-category="K-POP" class="category-btn bg-gray-700 text-gray-200 font-semibold py-2 px-6 rounded-full transition-colors hover:bg-gray-600">
+                    K-POP
+                </button>
+                <button data-category="Animation" class="category-btn bg-gray-700 text-gray-200 font-semibold py-2 px-6 rounded-full transition-colors hover:bg-gray-600">
+                    Animation
+                </button>
+                <button data-category="Number" class="category-btn bg-gray-700 text-gray-200 font-semibold py-2 px-6 rounded-full transition-colors hover:bg-gray-600">
+                    Number
+                </button>
+                <button data-category="J-POP" class="category-btn bg-gray-700 text-gray-200 font-semibold py-2 px-6 rounded-full transition-colors hover:bg-gray-600">
+                    J-POP
+                </button>
+            </div>
+        </section>
+
         <!-- 노래 목록 섹션 -->
         <section>
             <h2 class="text-3xl font-bold mb-6 text-gray-50">최신 음악</h2>
             
             <!-- 노래 카드가 동적으로 추가될 영역 -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6" id="song-list">
+            <div class="flex flex-col gap-4" id="song-list">
                 <!-- JavaScript로 동적으로 노래 카드를 생성합니다 -->
             </div>
         </section>
@@ -95,16 +114,24 @@
         document.addEventListener('DOMContentLoaded', () => {
             // 더미 노래 데이터 배열
             const songs = [
-                { title: '노래 제목 1', artist: '아티스트 이름 1', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+1' },
-                { title: '노래 제목 2', artist: '아티스트 이름 2', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+2' },
-                { title: '다른 노래 제목', artist: '유명한 아티스트', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+3' },
-                { title: '신나는 팝', artist: '팝의 제왕', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+4' },
-                { title: '숨겨진 보물', artist: '신인 가수', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+5' },
-                { title: '새로운 멜로디', artist: '작곡가 팀', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+6' },
-                { title: '저녁 노을', artist: '감성 보컬', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+7' },
-                { title: '고요한 밤', artist: '클래식 연주자', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+8' },
-                { title: '리듬 속으로', artist: '댄스 그룹', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+9' },
-                { title: '환상의 하모니', artist: '듀오', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=앨범+아트+10' },
+                { title: 'Dynamite', artist: 'BTS', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+1' },
+                { title: 'Lovesick Girls', artist: 'BLACKPINK', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+2' },
+                { title: 'Ditto', artist: 'NewJeans', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+3' },
+                { title: 'Super Shy', artist: 'NewJeans', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+4' },
+                { title: 'Idol', artist: 'BTS', category: 'K-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=K-POP+5' },
+                
+                { title: 'Sparkle', artist: 'RADWIMPS', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+1' },
+                { title: 'Gurenge', artist: 'LiSA', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+2' },
+                { title: 'The Hero!!', artist: 'JAM Project', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+3' },
+                { title: 'Inferno', artist: 'Mrs. Green Apple', category: 'Animation', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Animation+4' },
+                
+                { title: 'Shape of You', artist: 'Ed Sheeran', category: 'Number', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+1' },
+                { title: 'Blinding Lights', artist: 'The Weeknd', category: 'Number', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+2' },
+                { title: 'Dance Monkey', artist: 'Tones and I', category: 'Number', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=Number+3' },
+
+                { title: 'Lemon', artist: 'Kenshi Yonezu', category: 'J-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+1' },
+                { title: 'Night Dancer', artist: 'imase', category: 'J-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+2' },
+                { title: 'Yoru ni Kakeru', artist: 'YOASOBI', category: 'J-POP', imageUrl: 'https://placehold.co/300x300/374151/d1d5db?text=J-POP+3' },
             ];
 
             // DOM 요소들을 변수에 할당
@@ -114,6 +141,10 @@
             const nowPlayingTitle = document.getElementById('now-playing-title');
             const nowPlayingArtist = document.getElementById('now-playing-artist');
             const nowPlayingArt = document.getElementById('now-playing-art');
+            const categoryButtons = document.querySelectorAll('.category-btn');
+
+            let activeCategory = 'All'; // 현재 활성화된 카테고리를 추적합니다.
+            let currentSongs = songs; // 현재 표시할 노래 목록입니다.
 
             /**
              * 주어진 노래 데이터 배열을 바탕으로 HTML 노래 카드를 생성하고 목록에 추가합니다.
@@ -121,17 +152,19 @@
              */
             const renderSongs = (songsToRender) => {
                 songList.innerHTML = ''; // 기존 목록을 비웁니다.
+                if (songsToRender.length === 0) {
+                    songList.innerHTML = '<p class="text-center text-gray-500 col-span-full">해당 카테고리에 맞는 노래가 없습니다.</p>';
+                    return;
+                }
                 songsToRender.forEach(song => {
                     const card = document.createElement('div');
-                    card.className = 'bg-gray-800 p-4 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer song-card relative group';
+                    // 노래 카드를 한 행에 하나씩 표시하도록 스타일을 변경합니다.
+                    card.className = 'bg-gray-800 p-4 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 cursor-pointer';
                     card.innerHTML = `
-                        <img src="${song.imageUrl}" alt="${song.title} 앨범 아트" class="w-full h-auto rounded-lg mb-4">
-                        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center rounded-xl transition-all duration-300">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 play-icon" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4.004a1 1 0 001.555.832l3.445-2.002a1 1 0 000-1.664l-3.445-2.002z" clip-rule="evenodd" />
-                            </svg>
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-50 truncate">${song.title}</h3>
+                            <span class="bg-gray-700 text-gray-400 text-xs font-semibold px-2 py-1 rounded-full">${song.category}</span>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-50 truncate">${song.title}</h3>
                         <p class="text-gray-400 text-sm truncate">${song.artist}</p>
                     `;
                     
@@ -142,34 +175,63 @@
                         nowPlayingArt.src = song.imageUrl;
                         nowPlayingArt.alt = `${song.title} 앨범 아트`;
                         nowPlayingSection.classList.remove('hidden');
-                        
-                        // 현재 재생 중인 노래 아이콘에 애니메이션 적용
-                        const currentPlayIcon = document.querySelector('.play-icon-pulse');
-                        if (currentPlayIcon) {
-                            currentPlayIcon.classList.remove('play-icon-pulse');
-                        }
-                        const cardPlayIcon = card.querySelector('.play-icon');
-                        cardPlayIcon.classList.add('play-icon-pulse');
                     });
                     
                     songList.appendChild(card);
                 });
             };
 
-            // 페이지 로드 시 전체 노래 목록을 렌더링합니다.
-            renderSongs(songs);
+            /**
+             * 카테고리 또는 검색어에 따라 노래 목록을 필터링하고 렌더링합니다.
+             */
+            const filterAndRender = () => {
+                let filteredSongs = [];
+                // 1. 카테고리 필터링
+                if (activeCategory === 'All') {
+                    filteredSongs = songs;
+                } else {
+                    filteredSongs = songs.filter(song => song.category === activeCategory);
+                }
+                
+                // 2. 검색어 필터링
+                const searchTerm = searchInput.value.toLowerCase();
+                if (searchTerm) {
+                    currentSongs = filteredSongs.filter(song => 
+                        song.title.toLowerCase().includes(searchTerm) || 
+                        song.artist.toLowerCase().includes(searchTerm)
+                    );
+                } else {
+                    currentSongs = filteredSongs;
+                }
+                
+                renderSongs(currentSongs);
+            };
+
+            // 카테고리 버튼에 클릭 이벤트 리스너를 추가합니다.
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // 모든 버튼의 활성화 상태를 초기화합니다.
+                    categoryButtons.forEach(btn => {
+                        btn.classList.remove('bg-blue-500', 'text-white');
+                        btn.classList.add('bg-gray-700', 'text-gray-200');
+                    });
+
+                    // 클릭된 버튼을 활성화합니다.
+                    button.classList.remove('bg-gray-700', 'text-gray-200');
+                    button.classList.add('bg-blue-500', 'text-white');
+                    
+                    activeCategory = button.getAttribute('data-category');
+                    filterAndRender();
+                });
+            });
 
             // 검색 입력 필드에 'keyup' 이벤트 리스너를 추가합니다.
-            searchInput.addEventListener('keyup', (event) => {
-                const searchTerm = event.target.value.toLowerCase();
-                // 검색어에 맞는 노래만 필터링합니다.
-                const filteredSongs = songs.filter(song => 
-                    song.title.toLowerCase().includes(searchTerm) || 
-                    song.artist.toLowerCase().includes(searchTerm)
-                );
-                // 필터링된 노래 목록을 렌더링합니다.
-                renderSongs(filteredSongs);
+            searchInput.addEventListener('keyup', () => {
+                filterAndRender();
             });
+
+            // 페이지 로드 시 전체 노래 목록을 렌더링합니다.
+            filterAndRender();
         });
     </script>
 </body>
