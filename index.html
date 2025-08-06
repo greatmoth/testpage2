@@ -256,35 +256,6 @@
 
                     // --- 여기서부터 기존 로직 시작 (데이터 소스만 변경됨) ---
 
-                    // 노래 데이터에 기본값 및 랜덤 속성 할당
-                    const songs = allSongsData.map(song => {
-                        const newSong = { ...song }; // 원본 객체를 변경하지 않기 위해 복사
-                        
-                        if (newSong.category !== '업보목록') {
-                            // key와 bpm이 없는 경우 '?'로 할당
-                            if (!newSong.key) newSong.key = '?';
-                            if (!newSong.bpm) newSong.bpm = '?';
-
-                            // cheeseTag가 없는 경우 랜덤 할당
-                            if (!newSong.cheeseTag) {
-                                newSong.cheeseTag = Math.random() < 0.5 ? '5,000치즈' : '10,000치즈';
-                            }
-                            // difficulty가 비어있는 경우에만 랜덤 할당
-                            if (!newSong.difficulty) { 
-                                const randomNum = Math.random();
-                                if (randomNum < 0.25) {
-                                    newSong.difficulty = '어려움';
-                                } else if (randomNum < 0.5) {
-                                    newSong.difficulty = '1절';
-                                } else if (randomNum < 0.75) {
-                                    newSong.difficulty = '2절';
-                                } else {
-                                    newSong.difficulty = null; // 태그 없음
-                                }
-                            }
-                        }
-                        return newSong;
-                    });
 
                     // DOM 요소들을 변수에 할당
                     const searchInput = document.getElementById('search-input');
@@ -444,3 +415,4 @@
     </script>
 </body>
 </html>
+
