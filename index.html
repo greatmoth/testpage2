@@ -255,8 +255,10 @@
                     console.log(allSongsData);
 
                     // --- 여기서부터 기존 로직 시작 (데이터 소스만 변경됨) ---
-
-
+                    
+                    // 노래 데이터에 기본값 및 랜덤 속성 할당
+                    const songs = allSongsData;
+                    
                     // DOM 요소들을 변수에 할당
                     const searchInput = document.getElementById('search-input');
                     const songList = document.getElementById('song-list');
@@ -415,4 +417,5 @@
     </script>
 </body>
 </html>
+
 
