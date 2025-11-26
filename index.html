@@ -41,14 +41,29 @@
 <body class="bg-gray-900 text-gray-200 min-h-screen flex flex-col">
 
     <!-- 메인 컨테이너 -->
-    <div class="container mx-auto px-4 py-8 max-w-7xl flex-grow">
+    <div class="container mx-auto px-4 py-8 max-w-[800px] flex-grow relative">
+        <!-- 좌측 상단 버튼 (메인 컨테이너 내부, 이미지 위) -->
+        <div class="absolute top-12 left-8 flex space-x-2 z-10">
+            <!-- 공지사항 버튼 -->
+            <button id="show-modal-btn" class="p-3 bg-red-600 rounded-full shadow-lg text-white hover:bg-red-700 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+            </button>
+
+            <!-- 숙제 버튼 -->
+            <button id="show-homework-modal-btn" class="py-3 px-6 bg-blue-600 rounded-full shadow-lg text-white hover:bg-blue-700 transition-colors flex items-center justify-center">
+                <span class="text-sm font-semibold">업보</span>
+            </button>
+        </div>
+
         <!-- 상단 이미지 및 검색바 섹션 -->
         <header class="mb-12">
             <div class="relative w-full rounded-3xl overflow-hidden shadow-lg h-80">
                 <img 
                     src="https://github.com/greatmoth/testpage2/blob/main/top.png?raw=true" 
                     alt="음악 홈페이지 배너 이미지"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover object-right"
                 >
                 <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <div class="text-center p-4 pt-12">
@@ -75,7 +90,7 @@
 
         <!-- 카테고리 선택 섹션 (검색바 아래로 이동) -->
         <section class="mb-8">
-            <div class="flex flex-wrap justify-center space-x-2 sm:space-x-4">
+            <div class="flex flex-wrap justify-center gap-1 sm:gap-2">
                 <button data-category="All" class="category-btn bg-blue-500 text-white font-semibold py-2 px-6 rounded-full transition-colors hover:bg-blue-600">
                     전체
                 </button>
@@ -104,7 +119,7 @@
         <section>
             
             <!-- 노래 카드가 동적으로 추가될 영역 -->
-            <div class="flex flex-col gap-4" id="song-list">
+            <div class="flex flex-col gap-4 max-w-[800px] mx-auto" id="song-list">
                 <!-- JavaScript로 동적으로 노래 카드를 생성합니다 -->
             </div>
         </section>
@@ -154,20 +169,7 @@
         </div>
     </div>
 
-    <!-- 고정된 우측 하단 버튼 컨테이너 -->
-    <div class="fixed bottom-4 right-4 flex space-x-2 z-50">
-        <!-- 숙제 버튼 -->
-        <button id="show-homework-modal-btn" class="py-3 px-6 bg-blue-600 rounded-full shadow-lg text-white hover:bg-blue-700 transition-colors flex items-center justify-center">
-            <span class="text-sm font-semibold">업보</span>
-        </button>
-        
-        <!-- 공지사항 버튼 -->
-        <button id="show-modal-btn" class="p-3 bg-red-600 rounded-full shadow-lg text-white hover:bg-red-700 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-        </button>
-    </div>
+
 
     <!-- 클립보드 복사 성공 알림 메시지 (숨김 상태) -->
     <div id="toast" class="toast-message"></div>
@@ -180,7 +182,7 @@
             // difficulty와 cheeseTag는 '업보목록'을 제외하고 랜덤으로 할당될 것이므로 초기 데이터에서는 생략합니다.
             const allSongsData = [
                 // 남자 아이돌
-                { title: 'Dynamite', artist: 'BTS', category: '남자 아이돌', key: 'G#', bpm: 114 },
+                { title: 'Dynamite', artist: 'BTS', category: '남자 아이돌', key: 'G#', bpm: 114, memo:"test" },
                 { title: 'Idol', artist: 'BTS', category: '남자 아이돌', key: 'A', bpm: 126 },
                 { title: 'Seven (feat. Latto)', artist: '정국', category: '남자 아이돌', key: 'Em', bpm: 100 },
                 { title: 'Get A Guitar', artist: 'RIIZE', category: '남자 아이돌', key: 'Cm', bpm: 100 },
@@ -425,19 +427,23 @@
                     }
 
                     card.innerHTML = `
-                        <div class="flex items-baseline"> <!-- 노래 제목과 가수를 한 줄에 표시 -->
-                            <h3 class="text-lg font-semibold text-gray-50 truncate">${song.title}</h3>
-                            <p class="text-gray-400 text-sm truncate ml-2">${song.artist}</p>
+                        <div class="flex items-baseline justify-between"> <!-- 노래 제목과 가수를 한 줄에 표시, Key/BPM을 우측으로 이동 -->
+                            <div class="flex items-baseline overflow-hidden">
+                                <h3 class="text-lg font-semibold text-gray-50 truncate">${song.title}</h3>
+                                <p class="text-gray-400 text-sm truncate ml-2">${song.artist}</p>
+                            </div>
+                            <div class="flex space-x-2 text-gray-500 text-xs flex-shrink-0 ml-2">
+                                <span>Key: ${song.key || '?'}</span>
+                                <span>BPM: ${song.bpm || '?'}</span>
+                            </div>
                         </div>
-                        <div class="flex items-center justify-between mt-1">
+                        <div class="mt-2 flex items-center justify-between">
                             <!-- 태그들을 함께 배치 -->
                             <div class="flex space-x-2">
                                 ${tagsHtml}
                             </div>
-                            <div class="flex space-x-2 text-gray-500 text-xs">
-                                <span>Key: ${song.key || '?'}</span>
-                                <span>BPM: ${song.bpm || '?'}</span>
-                            </div>
+                            <!-- 메모 표시 영역 (작게, 오른쪽 정렬, 태그와 같은 줄) -->
+                            ${song.memo ? `<div class="text-gray-400 text-sm px-2 py-1 rounded-md">${song.memo}</div>` : ''}
                         </div>
                     `;
                     
