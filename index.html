@@ -358,6 +358,8 @@
                     if (!newSong.key) newSong.key = '?';
                     if (!newSong.bpm) newSong.bpm = '?';
 
+                    // 난이도나 가격 태그가 없는 경우 랜덤 할당 로직 제거 (빈칸 유지)
+                    /*
                     // cheeseTag가 없는 경우 랜덤 할당
                     if (!newSong.cheeseTag) {
                         newSong.cheeseTag = Math.random() < 0.5 ? '5,000치즈' : '10,000치즈';
@@ -376,6 +378,7 @@
                             newSong.difficulty = null; // 태그 없음
                         }
                     }
+                    */
                 }
                 return newSong;
             });
@@ -422,7 +425,7 @@
                         tagsHtml = `
                             <span class="bg-gray-700 text-gray-400 text-xs font-semibold px-2 py-1 rounded-full">${song.category}</span>
                             ${song.difficulty ? `<span class="bg-gray-700 text-blue-400 text-xs font-semibold px-2 py-1 rounded-full">${song.difficulty}</span>` : ''}
-                            <span class="bg-gray-700 text-yellow-400 text-xs font-semibold px-2 py-1 rounded-full">${song.cheeseTag}</span>
+                            ${song.cheeseTag ? `<span class="bg-gray-700 text-yellow-400 text-xs font-semibold px-2 py-1 rounded-full">${song.cheeseTag}</span>` : ''}
                         `;
                     }
 
